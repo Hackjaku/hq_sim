@@ -12,9 +12,9 @@ public:
     std::vector<double> operator / (Player &player);
 
 private:
-    int attack;
-    int defence;
-    int health;
+    int _attack;
+    int _defence;
+    int _health;
 };
 
 class Player {
@@ -23,9 +23,9 @@ public:
     std::vector<double> operator / (Monster &monster);
 
 private:
-    int attack;
-    int defence;
-    int health;
+    int _attack;
+    int _defence;
+    int _health;
 };
 
 #endif
