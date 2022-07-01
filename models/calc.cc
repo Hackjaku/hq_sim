@@ -26,3 +26,39 @@ matrix<double> Calc::multiply(vector<double> &v1, vector<double> &v2) {
     }
     return result;
 }
+
+std::vector<double> Calc::calculate_hit_chances(double attack_chance, double defense_chance, int attack, int defense) {
+
+    std::vector<double> result(attack + 1);
+
+    using namespace boost::numeric::ublas;
+
+    vector<double> player_rolls(attack + 1); // le marginali dell'attaccante
+    vector<double> monster_rolls(defense + 1); // le marginali del difensore
+
+    for (unsigned int i = 0; i <= attack; ++i) {
+        // ? calcolo la probabilita' di ogni risultato positivo
+        // la chance di attacco positivo e' 1/2 per ogni lancio
+        player_rolls[i] = bernoulli(attack, i, attack_chance);
+    }
+
+    for (unsigned int i = 0; i <= defense; ++i) {
+        // ? calcolo la probabilita' di ogni risultato positivo
+        // la chance di difesa positiva e' 1/6 per ogni lancio
+        monster_rolls[i] = bernoulli(defense, i, defense_chance);
+    }
+
+    auto matrix = multiply(player_rolls, monster_rolls);
+
+    for (int i = 0; i < attack + 1; ++i) {
+        for (int j = 0; j < defense + 1; ++j) {
+            auto xxx = matrix(i, j);
+            if (i - j <= 0) {
+                result[0] += matrix(i, j);
+            } else {
+                result[i - j] += matrix(i, j);
+            }
+        }
+    }
+    return result;
+}

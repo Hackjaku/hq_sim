@@ -10,39 +10,12 @@ matrix<double> multiply(vector<double> &v1, vector<double> &v2) {
     return result;
 }
 
+std::vector<double> Player::operator / (Monster &monster) {
+    return _calc.calculate_hit_chances(0.5, 0.1666, _attack, monster._defense);
+}
+
 std::vector<double> Monster::operator / (Player &player) {
-    std::vector<double> result(player._attack + 1);
-
-    using namespace boost::numeric::ublas;
-
-    vector<double> player_rolls(player._attack + 1); // le marginali dell'attaccante
-    vector<double> monster_rolls(this->_defense + 1); // le marginali del difensore
-
-    for (unsigned int i = 0; i <= player._attack; ++i) {
-        // ? calcolo la probabilita' di ogni risultato positivo
-        // la chance di attacco positivo e' 1/2 per ogni lancio
-        player_rolls[i] = _calc.bernoulli(player._attack, i, 0.5);
-    }
-
-    for (unsigned int i = 0; i <= this->_defense; ++i) {
-        // ? calcolo la probabilita' di ogni risultato positivo
-        // la chance di difesa positiva e' 1/6 per ogni lancio
-        monster_rolls[i] = _calc.bernoulli(this->_defense, i, 0.1666);
-    }
-
-    auto matrix = multiply(player_rolls, monster_rolls);
-
-    for (int i = 0; i < player._attack + 1; ++i) {
-        for (int j = 0; j < this->_defense + 1; ++j) {
-            auto xxx = matrix(i, j);
-            if (i - j <= 0) {
-                result[0] += matrix(i, j);
-            } else {
-                result[i - j] += matrix(i, j);
-            }
-        }
-    }
-    return result;
+    return _calc.calculate_hit_chances(0.5, 0.3333, player._attack, _defense);
 }
 
 Monster::Monster(int attack, int defence, int health) {
