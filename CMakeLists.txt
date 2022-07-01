@@ -11,6 +11,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(${PROJECT_NAME} main.cc)
 
+find_package(Boost 1.79.0 REQUIRED)
+
 aux_source_directory(models MODEL_SRC)
 
 target_include_directories(

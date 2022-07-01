@@ -1,6 +1,10 @@
 #ifndef CALC_H
 #define CALC_H
 
+#include <boost/numeric/ublas/matrix.hpp>
+
+using namespace boost::numeric::ublas;
+
 class Calc {
 public:
     double binomial(unsigned int n, unsigned int k);
