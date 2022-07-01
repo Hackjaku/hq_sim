@@ -21,26 +21,40 @@ std::vector<double> Monster::operator / (Player &player) {
     for (unsigned int i = 0; i <= player._attack; ++i) {
         // ? calcolo la probabilita' di ogni risultato positivo
         // la chance di attacco positivo e' 1/2 per ogni lancio
-        player_rolls[i] = Calculator.bernoulli(player._attack, i, 0.5);
+        player_rolls[i] = _calc.bernoulli(player._attack, i, 0.5);
     }
 
     for (unsigned int i = 0; i <= this->_defense; ++i) {
         // ? calcolo la probabilita' di ogni risultato positivo
         // la chance di difesa positiva e' 1/6 per ogni lancio
-        monster_rolls[i] = Calculator.bernoulli(this->_defense, i, 0.1666);
+        monster_rolls[i] = _calc.bernoulli(this->_defense, i, 0.1666);
     }
 
     auto matrix = multiply(player_rolls, monster_rolls);
 
-    for (unsigned int i = 0; i < player._attack + 1; ++i) {
-        for (unsigned int j = 0; j < this->_defense + 1; ++j) {
+    for (int i = 0; i < player._attack + 1; ++i) {
+        for (int j = 0; j < this->_defense + 1; ++j) {
+            auto xxx = matrix(i, j);
             if (i - j <= 0) {
-                result[i] += matrix(i, j);
+                result[0] += matrix(i, j);
             } else {
                 result[i - j] += matrix(i, j);
             }
         }
     }
-    
     return result;
+}
+
+Monster::Monster(int attack, int defence, int health) {
+    _attack = attack;
+    _defense = defence;
+    _health = health;
+    _calc = Calc();
+}
+
+Player::Player(int attack, int defence, int health) {
+    _attack = attack;
+    _defense = defence;
+    _health = health;
+    _calc = Calc();
 }

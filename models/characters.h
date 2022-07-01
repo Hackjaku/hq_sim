@@ -20,12 +20,16 @@ class Monster : public Character {
 public:
     Monster(int attack, int defence, int health);
     std::vector<double> operator / (Player &player);
+private:
+    Calc _calc;
 };
 
 class Player : public Character {
 public:
     Player(int attack, int defence, int health);
     std::vector<double> operator / (Monster &monster);
+private:
+    Calc _calc;
 };
 
 #endif

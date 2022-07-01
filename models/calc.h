@@ -10,6 +10,7 @@ public:
     double binomial(unsigned int n, unsigned int k);
     long long unsigned factorial(unsigned int n);
     double bernoulli(unsigned int n, unsigned int k, double p);
-} Calculator;
+    matrix<double> multiply (vector<double> &v1, vector<double> &v2);
+};
 
 #endif
