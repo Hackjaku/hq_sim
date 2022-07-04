@@ -10,12 +10,34 @@ matrix<double> multiply(vector<double> &v1, vector<double> &v2) {
     return result;
 }
 
-std::vector<double> Player::operator / (Monster &monster) {
-    return _calc.calculate_hit_chances(0.5, 0.1666, _attack, monster._defense);
+Player& Player::operator /= (Monster &monster) {
+    auto chance_vector = _calc.calculate_hit_chances(0.5, 0.3333, monster._attack, _defense);
+    srand((unsigned)time(NULL));
+    auto roll = (float) rand() / RAND_MAX;
+    float cumulative_chance = chance_vector[0];
+    for (int i = 1; i < chance_vector.size(); ++i) {
+        if (roll <= cumulative_chance) {
+            _health -= i;
+            break;
+        }
+        cumulative_chance += chance_vector[i];
+    }
+    return *this;
 }
 
-std::vector<double> Monster::operator / (Player &player) {
-    return _calc.calculate_hit_chances(0.5, 0.3333, player._attack, _defense);
+Monster& Monster::operator /= (Player &player) {
+    auto chance_vector = _calc.calculate_hit_chances(0.5, 0.1666, player._attack, _defense);
+    srand((unsigned)time(NULL));
+    auto roll = (float) rand() / RAND_MAX;
+    float cumulative_chance = chance_vector[0];
+    for (int i = 1; i < chance_vector.size(); ++i) {
+        if (roll <= cumulative_chance) {
+            _health -= i;
+            break;
+        }
+        cumulative_chance += chance_vector[i];
+    }
+    return *this;
 }
 
 Monster::Monster(int attack, int defence, int health) {
