@@ -12,30 +12,34 @@ matrix<double> multiply(vector<double> &v1, vector<double> &v2) {
 
 Player& Player::operator /= (Monster &monster) {
     auto chance_vector = _calc.calculate_hit_chances(0.5, 0.3333, monster._attack, _defense);
-    srand((unsigned)time(NULL));
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    srand((time_t)ts.tv_nsec);
     auto roll = (float) rand() / RAND_MAX;
-    float cumulative_chance = chance_vector[0];
-    for (int i = 1; i < chance_vector.size(); ++i) {
+    float cumulative_chance = 0;
+    for (int i = 0; i < chance_vector.size(); ++i) {
+        cumulative_chance += chance_vector[i];
         if (roll <= cumulative_chance) {
             _health -= i;
             break;
         }
-        cumulative_chance += chance_vector[i];
     }
     return *this;
 }
 
 Monster& Monster::operator /= (Player &player) {
     auto chance_vector = _calc.calculate_hit_chances(0.5, 0.1666, player._attack, _defense);
-    srand((unsigned)time(NULL));
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    srand((time_t)ts.tv_nsec);
     auto roll = (float) rand() / RAND_MAX;
-    float cumulative_chance = chance_vector[0];
-    for (int i = 1; i < chance_vector.size(); ++i) {
+    float cumulative_chance = 0;
+    for (int i = 0; i < chance_vector.size(); ++i) {
+        cumulative_chance += chance_vector[i];
         if (roll <= cumulative_chance) {
             _health -= i;
             break;
         }
-        cumulative_chance += chance_vector[i];
     }
     return *this;
 }
